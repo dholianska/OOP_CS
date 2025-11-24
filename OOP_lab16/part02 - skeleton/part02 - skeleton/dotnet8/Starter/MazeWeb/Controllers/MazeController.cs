@@ -9,14 +9,14 @@ namespace maze_web.Controllers;
 
 public class MazeController : Controller
 {
-    public IActionResult Index(int size, string algo, MazeColor color)
+    public async Task<IActionResult> Index(int size, string algo, MazeColor color)
     {
         // return Content($"{size}, {algo}, {color}");
 
         int mazeSize = GetSize(size);
         IMazeAlgorithm algorithm = GetAlgorithm(algo);
-        Image mazeImage = GenerateMazeImage(mazeSize, algorithm, color);
-        byte[] byteArray = ConvertToByteArray(mazeImage);
+        Image mazeImage = await GenerateMazeImage(mazeSize, algorithm, color);
+        byte[] byteArray = await ConvertToByteArray(mazeImage);
         return File(byteArray, "image/png");
     }
 
@@ -45,21 +45,21 @@ public class MazeController : Controller
         return algorithm!;
     }
 
-    private Image GenerateMazeImage(int mazeSize, IMazeAlgorithm algorithm, MazeColor color)
+    private async Task<Image> GenerateMazeImage(int mazeSize, IMazeAlgorithm algorithm, MazeColor color)
     {
         IMazeGenerator generator =
             new MazeGenerator(
                 new ColorGrid(mazeSize, mazeSize, color),
                 algorithm);
 
-        Image maze = generator.GetGraphicalMaze(true);
+        Image maze = await generator.GetGraphicalMaze(true);
         return maze;
     }
 
-    private static byte[] ConvertToByteArray(Image img)
+    private static async Task<byte[]> ConvertToByteArray(Image img)
     {
         using var stream = new MemoryStream();
-        img.SaveAsPng(stream);
+        await img.SaveAsPngAsync(stream);
         return stream.ToArray();
     }
 }

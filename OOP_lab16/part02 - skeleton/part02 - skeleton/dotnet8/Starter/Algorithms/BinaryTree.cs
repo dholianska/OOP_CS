@@ -4,8 +4,9 @@ namespace Algorithms;
 
 public class BinaryTree : IMazeAlgorithm
 {
-    public void CreateMaze(Grid grid)
+    public async Task CreateMaze(Grid grid)
     {
+        await Task.Run(() => { 
         var rnd = new Random();
 
         foreach (var cell in grid.EachCell())
@@ -23,5 +24,6 @@ public class BinaryTree : IMazeAlgorithm
                 cell.Link(neighbor);
             }
         }
+        });
     }
 }

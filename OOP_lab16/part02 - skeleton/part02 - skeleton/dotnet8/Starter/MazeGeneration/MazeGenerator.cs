@@ -1,6 +1,7 @@
 ﻿using Algorithms;
 using MazeGrid;
 using SixLabors.ImageSharp;
+using System.Runtime.CompilerServices;
 
 namespace MazeGeneration;
 
@@ -16,16 +17,16 @@ public class MazeGenerator : IMazeGenerator
         this.algorithm = algorithm;
     }
 
-    public void GenerateMaze()
+    public async Task GenerateMaze()
     {
-        algorithm.CreateMaze(mazeGrid);
+        await algorithm.CreateMaze(mazeGrid);
         isGenerated = true;
     }
 
-    public string GetTextMaze(bool includePath = false)
+    public async Task<string> GetTextMaze(bool includePath = false)
     {
         if (!isGenerated)
-            GenerateMaze();
+            await GenerateMaze();
 
         if (includePath)
         {
@@ -33,21 +34,21 @@ public class MazeGenerator : IMazeGenerator
             mazeGrid.path = start.GetDistances().PathTo(mazeGrid.GetCell(mazeGrid.Rows - 1, 0));
         }
 
-        var result = mazeGrid.ToString();
-        return result;
+        var result = mazeGrid.ToStringAsync();
+        return await result;
     }
 
-    public Image GetGraphicalMaze(bool includeHeatMap = false)
+    public async Task<Image> GetGraphicalMaze(bool includeHeatMap = false)
     {
         if (!isGenerated)
-            GenerateMaze();
+            await GenerateMaze();
 
         if (includeHeatMap)
         {
             Cell start = mazeGrid.GetCell(mazeGrid.Rows / 2, mazeGrid.Columns / 2);
             mazeGrid.distances = start.GetDistances();
         }
-        var result = mazeGrid.ToPng(30);
-        return result;
+        var result = mazeGrid.ToPngAsync(30);
+        return await result;
     }
 }

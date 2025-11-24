@@ -140,6 +140,7 @@ public abstract class Grid
 
     public Image ToPng(int cellSize = 10)
     {
+
         int imgWidth = cellSize * Columns;
         int imgHeight = cellSize * Rows;
 
@@ -181,6 +182,14 @@ public abstract class Grid
         }
 
         return mazeImage;
+    }
+    public Task<Image> ToPngAsync(int cellSize = 10)
+    {
+        return Task.Run(() => ToPng(cellSize));
+    }
+    public Task<string> ToStringAsync()
+    {
+        return Task.Run(() => ToString());
     }
 
 }

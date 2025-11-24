@@ -4,39 +4,42 @@ namespace Algorithms;
 
 public class Sidewinder : IMazeAlgorithm
 {
-    public void CreateMaze(Grid grid)
+    public async Task CreateMaze(Grid grid)
     {
-        var rnd = new Random();
-
-        foreach(var cellRow in grid.EachRow())
+        await Task.Run(() =>
         {
-            var run = new List<Cell>();
+            var rnd = new Random();
 
-            foreach(var cell in cellRow)
+            foreach (var cellRow in grid.EachRow())
             {
-                run.Add(cell);
+                var run = new List<Cell>();
 
-                bool atEasternBoundary = (cell.East == null);
-                bool atNorthernBoundary = (cell.North == null);
-
-                bool shouldCloseOut =
-                    atEasternBoundary ||
-                    (!atNorthernBoundary && rnd.Next(2) == 0);
-                   
-                if (shouldCloseOut)
+                foreach (var cell in cellRow)
                 {
-                    Cell member = run[rnd.Next(run.Count - 1)];
-                    if (member.North != null)
+                    run.Add(cell);
+
+                    bool atEasternBoundary = (cell.East == null);
+                    bool atNorthernBoundary = (cell.North == null);
+
+                    bool shouldCloseOut =
+                        atEasternBoundary ||
+                        (!atNorthernBoundary && rnd.Next(2) == 0);
+
+                    if (shouldCloseOut)
                     {
-                        member.Link(member.North);
+                        Cell member = run[rnd.Next(run.Count - 1)];
+                        if (member.North != null)
+                        {
+                            member.Link(member.North);
+                        }
+                        run.Clear();
                     }
-                    run.Clear();
-                }
-                else
-                {
-                    cell.Link(cell.East!);
+                    else
+                    {
+                        cell.Link(cell.East!);
+                    }
                 }
             }
-        }
+        });
     }
 }
