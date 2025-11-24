@@ -2,5 +2,5 @@
 
 public interface ILogger
 {
-    void LogMessage(string message, string data);
+    Task LogMessage(string message, string data);
 }
