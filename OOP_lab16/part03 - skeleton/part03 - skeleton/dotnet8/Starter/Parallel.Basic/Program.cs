@@ -125,9 +125,11 @@ class Program
 
     static void DisplayPerson(Person person)
     {
-        Console.WriteLine("--------------");
-        Console.WriteLine($"{person.Id}: {person}");
-        Console.WriteLine($"{person.StartDate:D}");
-        Console.WriteLine($"Rating: {new string('*', person.Rating)}");
+        StringBuilder builder = new();
+        builder.AppendLine("--------------");
+        builder.AppendLine($"{person.Id}: {person}");
+        builder.AppendLine($"{person.StartDate:D}");
+        builder.Append($"Rating: {new string('*', person.Rating)}");
+        Console.WriteLine(builder.ToString());
     }
 }

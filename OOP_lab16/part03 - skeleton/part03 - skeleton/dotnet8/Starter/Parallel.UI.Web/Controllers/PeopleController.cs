@@ -38,17 +38,62 @@ public class PeopleController : Controller
         }
     }
 
-    // OPTION 2: Task w/ Continuation (runs parallel)
     public async Task<IActionResult> WithTask()
     {
-        await Task.Delay(1);
-        return Content("This has not been implemented");
+        ViewData["Title"] = "Using Parallel";
+        ViewData["RequestStart"] = DateTime.Now;
+        try
+        {
+            List<int> ids = await reader.GetIdsAsync();
+            List<Task<Person>> tasks = new List<Task<Person>>();
+            List<Person> people = new();
+
+            foreach (int id in ids)
+            {
+                var task = reader.GetPersonAsync(id);
+                tasks.Add(task);
+            }
+            var results = await Task.WhenAll(tasks);
+            people.AddRange(results);
+
+            return View("Index", people);
+        }
+        catch (Exception ex)
+        {
+            List<Exception> errors = new() { ex };
+            return View("Error", errors);
+        }
+        finally
+        {
+            ViewData["RequestEnd"] = DateTime.Now;
+        }
     }
 
     // OPTION 3: Parallel.ForEachAsync (runs parallel)
     public async Task<IActionResult> WithForEach()
     {
-        await Task.Delay(1);
-        return Content("This has not been implemented");
+        ViewData["Title"] = "Using Task";
+        ViewData["RequestStart"] = DateTime.Now;
+        try
+        {
+            List<int> ids = await reader.GetIdsAsync();
+            ConcurrentBag<Person> people = new();
+
+            await Parallel.ForEachAsync(ids, async (id, cancelToken) =>
+            {
+                var person = await reader.GetPersonAsync(id, cancelToken);
+                people.Add(person);
+            });
+            return View("Index", people);
+        }
+        catch (Exception ex)
+        {
+            List<Exception> errors = new() { ex };
+            return View("Error", errors);
+        }
+        finally
+        {
+            ViewData["RequestEnd"] = DateTime.Now;
+        }
     }
 }

@@ -170,15 +170,14 @@ public partial class MainWindow : Window
             try
             {
                 var ids = await reader.GetIdsAsync();
-
                 await Parallel.ForEachAsync(
-                    ids,
-                    tokenSource.Token,
-                    async (id, token) =>
-                    {
-                        var person = await reader.GetPersonAsync(id, token);
-                        PersonListBox.Items.Add(person);
-                    });
+                            ids,
+                            tokenSource.Token,
+                async (id, token) =>
+                {
+                var person = await reader.GetPersonAsync(id, token);
+                PersonListBox.Items.Add(person);
+            });
             }
             catch (OperationCanceledException ex)
             {
