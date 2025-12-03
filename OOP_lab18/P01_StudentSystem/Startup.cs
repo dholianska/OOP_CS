@@ -48,7 +48,7 @@
 
             foreach (var course in coursesInfo)
             {
-                Console.WriteLine($"Курс: {course.Name} (Цiна: {course.Price:C})");
+                Console.WriteLine($"Курс: {course.Name} (Цiна: {course.Price} UAH)");
                 Console.WriteLine($"  Тривалiсть: {course.Duration:F0} днiв.");
                 Console.WriteLine($"  Студентiв: {course.StudentsCount}, Ресурсів: {course.ResourcesCount}");
             }
@@ -75,8 +75,8 @@
             foreach (var student in studentsInfo)
             {
                 Console.WriteLine($"Студент: {student.Name}");
-                Console.WriteLine($"  Дата реєстрації: {student.RegisteredOn.ToShortDateString()}");
-                Console.WriteLine($"  Кількість курсів: {student.CourseCount}, Домашніх завдань: {student.HomeworkCount}");
+                Console.WriteLine($"  Дата реєстрацiї: {student.RegisteredOn.ToShortDateString()}");
+                Console.WriteLine($"  Кiлькiсть курсiв: {student.CourseCount}, Домашніх завдань: {student.HomeworkCount}");
             }
         }
     }
